@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>주문 상세</title>
+<link rel="shortcut icon" type="image/x-icon"
+	href="/css/images/favicon.ico">
+<link rel="stylesheet" href="/css/style.css" type="text/css" media="all">
+<link rel="stylesheet" href="/css/flexslider.css" type="text/css"
+	media="all">
+<script src="/js/jquery-1.7.2.min.js"></script>
+<!--[if lt IE 9]><script src="js/modernizr.custom.js"></script><![endif]-->
+<script src="/js/jquery.flexslider-min.js"></script>
+<script src="/js/functions.js"></script>
+<style>
+
+div {
+	text-align: center;
+}
+
+a:hover, a:focus {
+	color: highlight;
+	text-decoration: underline;
+}
+
+a {
+	text-decoration: none;
+	color: blue;
+}
+
+table {
+	border-collapse: collapse;
+	margin-left: 360px;
+}
+
+table td, th {
+	padding: 8px;
+}
+
+
+input {
+	border: 1px solid gray;
+	border-left: none;
+	border-right: none;
+	border-top: none;
+}
+
+input:hover {
+	background-color: silver;
+}
+
+button {
+	border: 1px solid gray;
+}
+
+input:hover {
+	background-color: silver;
+}
+
+button:hover {
+	background-color: silver;
+}
+</style>
+</head>
+<body>
+	<div id="wrapper">
+		<header>
+			<div class="shell">
+				<h1 id="logo">
+					<a href="/">admin_main</a>
+				</h1>
+				<nav id="navigation">
+					<ul>
+						<li class="active"><a th:href="@{/}">HOME</a></li>
+						<li><a th:href="@{/board/getBoardList}">상품 관리</a></li>
+						<li><a th:href="@{/order/getOrderList_admin}">구매 관리</a></li>
+						<li><a th:href="@{/user/getUserList}">고객 관리</a></li>
+						<li><a th:href="@{/qna/getQnaList}">문의 관리</a></li>
+					</ul>
+				</nav>
+			</div>
+		</header>
+		<section class="top-section">
+			<div class="shell">
+				<h4 align="center">주문 상세</h4>
+				<div>
+					<span
+						data-th-text="|Today : ${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}|"></span>
+				</div>
+				<br>
+				<br>
+				<form th:action="@{/order/updateOrder}" method="post">
+					<table th:align="center" th:cellpadding="12" border="1">
+						<tr>
+							<th>주문번호<input name="oseq" type="hidden"
+								th:value="${order.oseq}"></th>
+							<td colspan="2" th:text="${order.oseq}"></td>
+						</tr>
+						<tr>
+							<th>배송비</th>
+							<td colspan="2"><input name="delivery_fee" type="text"
+								th:value="${order.delivery_fee}"></td>
+						</tr>
+						<tr>
+							<th>주문자 id</th>
+							<td colspan="2" th:text="${order.user.id}"></td>
+						</tr>
+
+						<tr>
+							<th>총 가격</th>
+							<td colspan="2" th:text="${order.total_price}"></td>
+						</tr>
+						<tr>
+							<th>주문 날짜</th>
+							<td colspan="2"
+								th:text="${#dates.format(order.indate, 'YYYY/MM/DD HH시 MM분')}"></td>
+						</tr>
+						<tr>
+							<th>주문상태</th>
+							<td><select name="result" id="result">
+									<option th:each="list:${order.result}" th:text="${list}"
+										th:selected="${list}==${order.result}" />
+									<option th:selected="${order.result}=='1'"
+										th:if="${order.result !='1'}">1</option>
+									<option th:selected="${order.result}=='2'"
+										th:if="${order.result !='2'}">2</option>
+									<option th:selected="${order.result}=='3'"
+										th:if="${order.result !='3'}">3</option>
+							</select></td>
+						<tr>
+							<td colspan="2" align="center"><input type="submit"
+								value="수정하기">
+						</tr>
+					</table>
+				</form>
+				<br>
+			</div>
+		</section>
+	</div>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<html xmlns:th="http://www.thymeleaf.org" 
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<meta charset="UTF-8">
+<title>주문 내역</title>
+<link th:href="@{/css/cart.css}" rel="stylesheet">
+<link rel="shortcut icon" type="image/x-icon" th:href="@{/css/images/favicon.ico}">
+<link rel="stylesheet" th:href="@{/css/listStyle.css}" type="text/css" media="all">
+<link rel="stylesheet" th:href="@{/css/commonStyle.css}" type="text/css" media="all">
+<!--[if lt IE 9]><script src="js/modernizr.custom.js"></script><![endif]-->
+</head>
+<body>
+<!-- wrapper -->
+<div id="wrapper">
+    <!-- header -->
+  <th:block th:replace="~{fragments/header :: header}"></th:block>
+  <!-- end of header -->
+ 	<!-- main -->
+	<div id="listTable">
+	<h3 th:if="${#lists.size(orderList) == 0}" th:align="center">구매한 내역이 없습니다.</h3>
+	<th:block th:if="${#lists.size(orderList) >= 1}">
+	<table class="subject_table">
+		<tbody>
+			<tr>
+				<th class="td_width_2"></th>
+				<th class="td_width_3">상품명</th>
+				<th class="td_width_4">수량</th>
+				<th class="td_width_4">결제 가격</th>
+				<th class="td_width_4">진행 상태</th>
+				<th class="td_width_2"></th>
+				<th class="td_width_4">상세 정보</th>			
+			</tr>
+		</tbody>
+	</table>
+	<table class="cart_table">
+		<caption>표 내용 부분</caption>
+		<tbody>
+			<tr th:each="order, stat : ${orderList}">
+				<td class="td_width_2">
+					<img th:src="${order.odList[0].book.image}" alt="이미지" th:if="${order.odList[0].book.image != null}"/>
+				</td>
+				<td class="td_width_3">
+					<a th:href="@{/book/getBook(id=${order.odList[0].book.id})}" th:text="${order.odList[0].book.title}" th:align="center"></a><br>
+					<small th:text="'외'+${#aggregates.sum(order.odList.![quantity])-1}+'권'" th:align="center"></small>
+				</td>
+				<td class="td_width_4 table_text_align_center">
+					<div class="table_text_align_center quantity_div">
+						<span th:text = "${#aggregates.sum(order.odList.![quantity])}" th:id="'quantity'+${stat.index}" style="width: 50px;"></span>
+					</div>
+				</td>
+				<td class="td_width_4 table_text_align_center">
+					<th:block th:text="${#numbers.formatInteger(order.total_price + order.delivery_fee,3,'COMMA')}" th:align="center"/>
+				</td>
+				<td class="td_width_4 table_text_align_center" th:switch="${order.result}">
+					<span th:case="1">주문확인 중</span>
+					<span th:case="2">배송 준비 중</span>
+					<span th:case="3">배송 중</span>
+					<span  th:case="4">배송 완료</span>
+					<span th:case="5">취소확인 중</span>
+					<span th:case="6">취소 완료</span>
+				</td>
+				<td class="td_width_4 table_text_align_center refund_btn" th:if="${order.result <=3}">
+					<span><button type="button" id="refud" th:align="center" th:onclick="orderRefund([[${order.oseq}]]);">환불</button></span>
+				</td>
+				<td class="td_width_4 table_text_align_center">
+					<a th:href="@{/order/getDetail(oseq=${order.oseq})}">상세 결제 확인</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<br>
+</th:block>
+</div>
+</div>
+<!-- footer -->
+<th:block th:replace="~{fragments/footer :: footer}"></th:block>
+<!-- end of footer -->
+</body>
+<script th:src="@{/js/jquery-3.6.3.min.js}"></script>
+<script th:src="@{/js/order.js}" th:inline="javascript"></script>
+</html>

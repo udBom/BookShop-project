@@ -1,0 +1,55 @@
+<html xmlns:th="http://www.thymeleaf.org" 
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<meta charset="UTF-8">
+<title>주문 상세</title>
+<link th:href="@{/css/order.css}" rel="stylesheet">
+<link rel="shortcut icon" type="image/x-icon" th:href="@{/css/images/favicon.ico}">
+<link rel="stylesheet" th:href="@{/css/listStyle.css}" type="text/css" media="all">
+<link rel="stylesheet" th:href="@{/css/commonStyle.css}" type="text/css" media="all">
+<!--[if lt IE 9]><script src="js/modernizr.custom.js"></script><![endif]-->
+</head>
+
+<body>
+<!-- wrapper -->
+<div id="wrapper">
+    <!-- header -->
+  <th:block th:replace="~{fragments/header :: header}"></th:block>
+  <!-- end of header -->
+	<div class="orderGoods_div">
+		<!-- 상품 종류 -->
+		<div class="goods_kind_div">
+			주문상품  <span class="goods_kind_div_count" th:text="${amount}"></span>개
+		</div>
+		<!-- 상품 테이블 -->
+		<table class="goods_subject_table">
+			<tbody>
+				<tr>
+					<th>이미지</th>
+					<th>상품 정보</th>
+					<th>판매가</th>
+				</tr>
+			</tbody>
+			<tbody th:each ="od : ${odList}">
+				<tr>
+					<td>
+						<!-- 이미지 <td>-->
+					</td>
+					<td th:text ="${od.book.title}"></td>
+					<td class="goods_table_price_td" th:align = "center">
+						<span th:text="${#numbers.formatInteger(od.book.price,3,'COMMA')}"></span>원 | 수량 <th:block th:text="${od.quantity}"></th:block>개 
+						<br><span th:text="${#numbers.formatInteger(od.book.price * od.quantity,3,'COMMA')}"></span>원
+						<br>[<span th:text="${#numbers.formatInteger(od.book.per_point * od.quantity,3,'COMMA')}"></span> P]
+					</td>
+				</tr>							
+			</tbody>
+		</table>
+	</div>
+	</div>
+<!-- footer -->
+<th:block th:replace="~{fragments/footer :: footer}"></th:block>
+<!-- end of footer -->
+</body>
+<script th:src="@{/js/jquery-3.6.3.min.js}"></script>
+<script th:src="@{/js/order.js}" th:inline="javascript"></script>
+</html>

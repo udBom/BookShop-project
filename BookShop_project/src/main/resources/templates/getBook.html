@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+<title>BookList</title>
+<meta charset="utf-8">
+<link rel="shortcut icon" type="image/x-icon" href="css/images/favicon.ico">
+<link rel="stylesheet" href="css/bookStyle.css" type="text/css" media="all">
+<link rel="stylesheet" href="css/reviewStyle.css" type="text/css" media="all">
+<link rel="stylesheet" href="css/commonStyle.css" type="text/css" media="all">
+</head>
+<body>
+<!-- wrapper -->
+<div id="wrapper" align="center">
+  <!-- header -->
+ <th:block th:replace="~{fragments/header :: header}"></th:block>
+  <!-- end of header -->
+ 	<!-- main -->
+ 	<section class="section" >
+ 	<div class="content" >
+	 			<div class="horizontal"><!-- 리스트 틀 -->
+	 				<div class="bookimage"> <!-- 왼쪽 책 이미지 -->
+	 					<div class="imagesize">
+	 						<img th:src="@{'images/'+${book.image}}">
+	 					</div>
+	 				</div>
+	 				<div class="bookinfo"><!-- 오른쪽 책 정보 -->
+	 					<div class="book-title">
+							<h1><span th:text="${book.title}"></span></h1>
+	 					</div>
+	 					<div class="book-author">
+		 					<span th:text="${book.author}"></span>
+	 					</div>
+	 					<div class="book-publisher">
+		 					<span th:text="${book.publisher}"></span>
+		 					<span th:text="${#dates.format(book.publishing_date, 'yyyy-MM-dd')}"></span>
+	 					</div>
+	 				</div>
+	 				
+	 				<div class="price-wrap">
+	 					<div class="price">
+	 						<div class="price-top">
+				 				<div class="price-left">
+				 					<span th:text="'판매가'"></span>
+				 				</div>
+				 				<div class="price-right">
+				 					<span th:text="${book.price}+'원'"></span>
+				 				</div>
+	 						</div>
+			 				<div class="price-bottom">
+			 					<div class="price-left">
+			 						<span th:text="'포인트 적립'"></span>
+			 					</div>
+			 					<div class="price-right">
+			 						<span th:text="${book.price} * ${book.per_point} / 100"></span>
+			 						<span th:text="P"></span>
+			 						<span th:text="'('+${book.per_point}+'% 적립)'"></span>
+			 					</div>
+			 					<div class="reviewList">
+			 						<a th:href="@{/review/getReviewList}">리뷰 목록> </a>
+			 					</div>
+			 				</div>
+	 					</div>
+ 						<form th:action="@{/cart/insertCart}" method="post">
+ 						<input th:name="book_id" th:value="${book.id}" type="hidden">
+ 						<input th:name="user_id" th:value="user" type="hidden">
+	 					<div class="purchase" align="center">
+			 				<div th:if="${book.quantity} <= 0" class="quantity">
+		 						<span>품절</span>
+			 				</div>
+			 					<div class="purchase-quantity">
+					 				<div class="quantity-left">
+					 					<span th:text="'수량'"></span>
+					 				</div>
+					 				<div class="quantity-right">
+					 					<span>
+					 						<input type="number" name="quantity">
+					 					</span>
+					 				</div>	
+					 			</div>
+			 					<div class="button-size">
+		 							<input type="submit" value="장바구니" onclick="alert('장바구니에 담겼습니다.')" class="button">
+		 						</div>
+		 						<!-- 
+			 					<div class="button-size">
+			 						<input type="submit" value="바로 구매" class="button">
+			 					</div>
+		 						 -->
+	 					</div>
+ 						</form>
+	 				</div>
+	 			</div>
+	 				<div class="intro_book"  align="left">
+	 					<h1>책 소개</h1>
+	 					<br>
+	 					<span th:text="${book.content}"></span>
+	 				</div>
+ 	</div>
+      
+ 	</section>
+</div>
+<!-- footer -->
+<th:block th:replace="~{fragments/footer :: footer}"></th:block>
+<!-- end of footer -->
+</body>
+</html>

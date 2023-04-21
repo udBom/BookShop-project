@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+<html>
+<head>
+<meta charset="utf-8">
+<title>신상품과 리뷰페이지</title>
+<link rel="stylesheet" href="/css/style.css" > <!-- <link rel="stylesheet" th:href="/css/style.css" > -->
+<link rel="stylesheet" href="/css/review.css"> <!-- <link rel="stylesheet" th:href="/css/review.css"> -->
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+</head>
+<body>
+	<script src="/js/storeDataSendAjax.js"></script>
+  <header>
+    <div class="shell">
+      <h1 id="logo"><a href="index.html">Busymode</a></h1>
+      <nav id="navigation">
+        <ul>
+       
+          <li class="active"> 
+          	  <a th:href="login.html">로그인</a></li>
+          <li><a th:href="signUp.html">회원가입</a></li>
+          <li><a href="#">마이페이지</a></li>
+          <li><a href="#">베스트</a></li>
+          <li><a th:href="getReviewList">신상품</a></li>
+          <li><a href="#">이벤트</a></li>
+           <li><a th:href="getQnaList">고객센터</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+ <br> <br><br><br><br><br><br><br>
+<h1 class="con">리뷰 입력</h1>
+<div class="con reply">
+	
+	   <section class="reply-form">
+	   <form th:action="@{/insertReview}" method="post" >
+	    <!-- hidden 영역 -->
+		   <!-- <input type="hidden" name="id" th:value="${review.member.user_id}">  	
+		   <input type="hidden" name="date" th:value="${review.regdate}" -->
+	   <!-- 입력 영역 -->    
+	           <div>
+	            	책 이름:  <input id="book_id" type="text" name="book_id"> &nbsp;&nbsp; <!-- 작성자 이름:  <input id="user_id" type="text" name="user_id">   -->
+	           </div>
+	           <div>	       
+	            <textarea id="content" cols="130" rows="10" name="content"  placeholder=" 리뷰를 입력해주세요."></textarea>
+	            &nbsp;&nbsp;&nbsp; 
+	          <!--  <p1> <button type="submit" onclick="return dataSend()">리뷰 등록</button></p1> -->
+	            <input type="submit" value="리뷰 등록">   
+	           </div>
+           </form> 
+	    </section>
+</div>
+
+    
+<br> <br><br><br>
+<h1 class="con">리뷰목록</h1>
+<div class="con reply">
+    <section class="article-detail table-common con row">
+        <table class="cell" border="1">
+            <colgroup>
+                <col width="100px">
+            </colgroup>
+            <tbody>
+            <div id="reviewTable">
+            	<th:block th:each="review:${reviewList}" class="article-title">
+            	<form method="POST">
+	                <tr class="article-title"> <!-- <tr th:each="review,state:${reviewList}" class="article-title"> -->
+	                    <th>날짜</th>
+	                       <td colspan="4" th:text="${#dates.format(review.regdate, 'yyyy-MM-dd')}" ></td>
+	                </tr>
+	                <tr class="article-info">
+	                    <th >책 이름 </th>
+	                    <td><a th:href="@{/getReview(seq=${review.seq})}" th:text="${review.book_id}"></a></td>
+	                     <th >작성자</th>
+	                     <td th:text="${review.member.user_id}"></td>
+	                </tr>
+	                <tr class="article-body">
+	                	<td colspan="4" th:text="${review.content}">리뷰 내용</td>
+	                </tr>
+                 </form>
+              </th:block>
+              </div>
+            </tbody>
+        </table>
+    </section>
+</div>
+				<div class="pagination">
+					<ul>
+						<li th:each="page: ${#numbers.sequence(0,totalPage-1)}"><!-- 0페이지 부터 나와야 함! -->
+						<a th:href="@{getReviewList(page=${pageStat.index})}" th:text="${pageStat.index +1}"></a> 
+						 <!-- @{review/getReviewList$%^%$}아님!!! controller에 requestParam을 안해줬기 때문에! -->
+						</li>
+					</ul>
+				</div>
+</body>
+</html>

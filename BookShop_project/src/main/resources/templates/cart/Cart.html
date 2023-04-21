@@ -1,0 +1,179 @@
+<html xmlns:th="http://www.thymeleaf.org" 
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+	<title>장바구니 목록</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link th:href="@{/css/cart.css}" rel="stylesheet">
+	<link rel="shortcut icon" type="image/x-icon" th:href="@{/css/images/favicon.ico}">
+	<link rel="stylesheet" th:href="@{/css/listStyle.css}" type="text/css" media="all">
+	<link rel="stylesheet" th:href="@{/css/commonStyle.css}" type="text/css" media="all">
+	<!--[if lt IE 9]><script src="js/modernizr.custom.js"></script><![endif]-->
+	<script th:src="@{/js/jquery-3.6.3.min.js}"></script>
+<script th:src="@{/js/cartUpdate.js}" th:inline="javascript"></script>
+</head>
+
+<body th:align="center">
+<!-- wrapper -->
+<div id="wrapper" align="center">
+    <!-- header -->
+  <th:block th:replace="~{fragments/header :: header}"></th:block>
+  <!-- end of header -->
+<!-- <span sec:authorize="isAuthenticated()">
+	<a th:href="@{/system/logout}">로그아웃</a>&nbsp;&nbsp;&nbsp;
+</span> -->
+<hr>
+
+<div id="listTable">
+	<h3 th:if="${#lists.size(cartList) == 0}" th:align="center">장바구니가 비었습니다.</h3>
+	<th:block th:if="${#lists.size(cartList) >= 1}">
+	<div class="all_check_input_div" th:align="left">
+		<input type="checkbox" class="all_check_input input_size_20" th:attr="checked = ${allChecked == 1 ? 'true': 'false'}" th:onchange="allCheckedBox([[${allChecked}]])"><span class="all_chcek_span">전체선택</span>
+	</div>
+	<table class="subject_table">
+		<caption>표 제목 부분</caption>
+		<tbody>
+			<tr>
+				<th class="td_width_1"></th>
+				<th class="td_width_2"></th>
+				<th class="td_width_3">상품명</th>
+				<th class="td_width_4">가격</th>
+				<th class="td_width_4">수량</th>
+				<th class="td_width_4">합계</th>
+				<th class="td_width_4">삭제</th>
+			</tr>
+		</tbody>
+	</table>
+	<table class="cart_table">
+		<caption>표 내용 부분</caption>
+		<tbody>
+			<tr th:each="cart, stat : ${cartList}">
+				<td class="td_width_1 cart_info_td">
+					<input type="checkbox" class="individual_cart_checkbox input_size_20" th:attr="checked = ${cart.checked.toString()}" th:onchange="checkedBox([[${cart.cseq}]], [[${cart.checked}]])">
+					<input type="hidden" th:value = "${cart.user.id}" th:id="user_id">
+					<input type="hidden" th:value = "${cart.book.price}" th:id="price">
+				</td>
+				<td class="td_width_2">
+					<img th:src="@{'../images/'+${cart.book.image}}" alt="이미지"/>
+				</td>
+				<td class="td_width_3"><a th:href="@{/getBook(id=${cart.book.id})}" th:text="${cart.book.title}" th:align="center"></a><br>
+					<small th:text="${cart.book.publisher}" th:align="center"></small>
+				</td>
+				<td class="td_width_4 price_td">
+					정가 : <th:block th:text="${#numbers.formatInteger(cart.book.price,3,'COMMA')}"/>원<br>
+					마일리지 : <span class="green_color"><th:block th:text="${#numbers.formatInteger(cart.book.per_point,3,'COMMA')}"/></span>
+				</td>
+				<td class="td_width_4 table_text_align_center">
+					<div class="table_text_align_center quantity_div">
+						<input type="number" th:value = "${cart.quantity}" th:id="'quantity'+${stat.index}" style="width: 50px;" th:onchange="quantity([[${cart.cseq}]], [[${stat.index}]], [[${cart.book.quantity}]])">
+					</div>
+				</td>
+				<td class="td_width_4 table_text_align_center">
+					<th:block th:text="${#numbers.formatInteger(cart.book.price * cart.quantity,3,'COMMA')}" th:align="center"/>
+				</td>
+				<td class="td_width_4 table_text_align_center delete_btn">
+					<span><button type="button" id="delete" th:align="center" th:onclick="cartDelete([[${cart.cseq}]]);">삭제</button></span>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<br>
+	<div class="content_total_section" th:if="${#lists.size(checkedCartList) != 0}">
+		<div class="total_wrap">
+			<table>
+				<tr>
+					<td>
+						<table style="width: 750px">
+							<tr>
+								<td>총 상품 가격</td>
+								<td>
+									<span class="totalPrice_span" th:text="${#numbers.formatInteger(#aggregates.sum(checkedCartList.![book.price * quantity]),3,'COMMA')}">0</span> 원
+								</td>
+							</tr>
+							<tr>
+								<td>배송비</td>
+								<td>
+									<th:block th:if="${#aggregates.sum(checkedCartList.![book.price * quantity]) >= 30000}">
+										<span class="delivery_price">0</span>원
+									</th:block>
+									<th:block th:if="${#aggregates.sum(checkedCartList.![book.price * quantity]) == 0}">
+										<span class="delivery_price" >0</span>원
+									</th:block>
+									<th:block th:if="${#aggregates.sum(checkedCartList.![book.price* quantity]) <= 30000}"	>
+										<span class="delivery_price" >3,000</span>원 <--<small style="color: red;"> 30,000원 이상 구매 시 배송비 무료!</small	>
+									</th:block>
+									
+								</td>
+							</tr>									
+							<tr>
+								<td>총 주문 상품수</td>
+								<td><span class="totalCount_span" th:text="${#aggregates.sum(checkedCartList.![quantity])}"></span>권</td>
+							</tr>
+						</table>
+					</td>
+					<td>
+						<table>
+							<tr>
+								<td></td>
+								<td></td>
+							</tr>
+						</table>							
+					</td>
+				</tr>
+			</table>
+			<div class="boundary_div">구분선</div>
+			<table>
+				<tr>
+					<td>
+						<table>
+							<tbody>
+								<tr>
+									<td>
+										<strong>총 결제 예상 금액</strong>
+									</td>
+									<td>
+										<th:block th:if="${#aggregates.sum(checkedCartList.![book.price * quantity]) >= 30000}">
+											<span class="finalTotalPrice_span" th:text="${#numbers.formatInteger(#aggregates.sum(checkedCartList.![book.price * quantity]),3,'COMMA')}"></span>원
+										</th:block>
+										<th:block th:if="${#aggregates.sum(checkedCartList.![book.price * quantity]) == 0}">
+											<span class="finalTotalPrice_span"  th:text="${#numbers.formatInteger(#aggregates.sum(checkedCartList.![book.price * quantity]),3,'COMMA')}">0</span>원
+										</th:block>
+										<th:block th:if="${#aggregates.sum(checkedCartList.![book.price* quantity]) <= 30000}"	>
+											<span class="finalTotalPrice_span" th:text="${#numbers.formatInteger(#aggregates.sum(checkedCartList.![book.price * quantity])+3000,3,'COMMA')}">3000</span>원
+										</th:block>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+					<td>
+						<table>
+							<tbody>
+								<tr>
+									<td>
+										<strong style="font-size: 15px;">총 적립	예상 마일리지</strong>
+									
+									</td>
+									<td>
+										<span class="totalPoint_span" th:text="${#aggregates.sum(checkedCartList.![book.per_point * quantity])}">70000</span> 원
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<table>
+			<tr th:align="center" th:width="700">
+				<td><a th:href="@{/order/orderSelected(id = ${user_id})}" th:align="center" th:id="selectedOrder">선택 주문하기</a></td>
+			</tr>
+		</table>
+	</div>
+	</th:block>
+</div>
+</div>
+<!-- footer -->
+<th:block th:replace="~{fragments/footer :: footer}"></th:block>
+<!-- end of footer -->
+</body>
+</html>

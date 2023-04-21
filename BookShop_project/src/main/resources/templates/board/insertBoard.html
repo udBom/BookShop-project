@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>상품 등록</title>
+<link rel="shortcut icon" type="image/x-icon"
+	href="/css/images/favicon.ico">
+<link rel="stylesheet" href="/css/style.css" type="text/css" media="all">
+<link rel="stylesheet" href="/css/flexslider.css" type="text/css"
+	media="all">
+<script src="/js/jquery-1.7.2.min.js"></script>
+<!--[if lt IE 9]><script src="js/modernizr.custom.js"></script><![endif]-->
+<script src="/js/jquery.flexslider-min.js"></script>
+<script src="/js/functions.js"></script>
+<style>
+input {
+	border: 1px solid gray;
+	border-radius: 2px;
+	border-left: none;
+	border-right: none;
+	border-top: none;
+}
+
+table {
+	border-collapse: collapse;
+	margin-left: 200px;
+}
+
+button {
+	border: 1px solid gray;
+	border-left: none;
+	border-right: none;
+	border-top: none;
+}
+
+input:hover {
+	background-color: silver;
+}
+</style>
+</head>
+<body>
+	<div id="wrapper">
+		<header>
+			<div class="shell">
+				<h1 id="logo">
+					<a href="/">admin_main</a>
+				</h1>
+				<nav id="navigation">
+					<ul>
+						<li class="active"><a th:href="@{/}">HOME</a></li>
+						<li><a th:href="@{/board/getBoardList}">상품 관리</a></li>
+						<li><a th:href="@{/order/getOrderList_admin}">구매 관리</a></li>
+						<li><a th:href="@{/user/getUserList}">고객 관리</a></li>
+						<li><a th:href="@{/qna/getQnaList}">문의 관리</a></li>
+					</ul>
+				</nav>
+			</div>
+		</header>
+		<section class="top-section">
+			<div class="shell">
+				<h4 align="center">상품 등록</h4>
+				<br>
+				<form th:action="@{/board/insertBoard}" method="post"
+					enctype="multipart/form-data">
+					<table th:align="center" border="2" th:cellpadding="7"
+						th:cellspacing="0" th:width="500">
+						<tr>
+							<td th:text="title" width="80"></td>
+							<td><input name="title" type="text"></td>
+						</tr>
+						<tr>
+							<td th:text="type"></td>
+							<td><input name="type" type="text"></td>
+						</tr>
+						<tr>
+							<td th:text="price"></td>
+							<td><input name="price" type="text"></td>
+						</tr>
+						<tr>
+							<td th:text="author"></td>
+							<td><input name="author" type="text"></td>
+						</tr>
+						<tr>
+							<td th:text="publisher"></td>
+							<td><input name="publisher" type="text"></td>
+						</tr>
+						<tr>
+							<td th:text="content"></td>
+							<td><textarea name="content" th:align="center" cols="55"
+									rows="20"></textarea></td>
+						</tr>
+
+						<tr>
+							<td th:text="purchase"></td>
+							<td><input name="purchase" type="text"></td>
+						</tr>
+						<tr>
+							<td th:text="quantity"></td>
+							<td><input name="quantity" type="text"></td>
+						</tr>
+						<tr>
+							<td th:text="per_point"></td>
+							<td><input name="per_point" type="text"></td>
+						</tr>
+						<tr>
+							<td th:text="image"></td>
+							<td><input type="file" th:name="file" th:value="image"
+								accept=".jpg, .png" /></td>
+						<tr>
+							<td colspan="2" align="center"><input type="submit"
+								value="상품 등록">
+						</tr>
+					</table>
+				</form>
+				<br>
+			</div>
+		</section>
+	</div>
+</body>
+</html>

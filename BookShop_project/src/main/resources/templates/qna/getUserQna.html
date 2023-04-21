@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<html>
+<head>
+<meta charset="utf-8">
+<title>QnA 고객센터페이지</title>
+<link rel="shortcut icon" href="css/images/favicon.ico" sizes="16x16" />
+<link rel="stylesheet" href="/css/style.css" > <!-- <link rel="stylesheet" th:href="/css/style.css" > -->
+<link rel="stylesheet" href="/css/review.css"> <!-- <link rel="stylesheet" th:href="/css/review.css"> -->
+
+<!-- reply 답글 삭제를 위한 script -->
+<script>
+function deleteReply(reseq) {
+	var theForm = document.getElementById("deleteForm");
+	
+	theForm.action = "deleteReply?reseq="+reseq;
+	theForm.submit();
+}
+</script>
+</head>
+<body>
+<div id="wrapper">
+    <header>
+    <div class="shell">
+      <h1 id="logo"><a href="index.html">Busymode</a></h1>
+      <nav id="navigation">
+        <ul>
+       
+          <li class="active"> 
+          	  <a th:href="login.html">로그인</a></li>
+          <li><a th:href="signUp.html">회원가입</a></li>
+          <li><a href="#">마이페이지</a></li>
+          <li><a href="getReviewList">베스트</a></li>
+          <li><a th:href="getReviewList">신상품</a></li>
+          <li><a href="getCheck">이벤트</a></li>
+           <li><a th:href="getQnaList">고객센터</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+ <br> <br><br><br><br><br><br><br>
+ 
+ 	<!-- 페이지 제목 -->		
+ 	<div class="test">
+	 	<div class="tin">
+	 		Reply 
+	 	</div>
+ 	</div>
+ 	
+ 	
+ 	<!--Qna 수정 및 삭제  -->
+<h1 class="con">QnA 수정 및 삭제</h1>
+<form th:action="@{/qna/updateUserQna}" method="post">
+	<input name="seq" type="hidden" th:value="${qna.seq}"/>
+	<div class="con reply">
+	    <section class="article-detail table-common con row">
+        <table class="cell" border="1">
+            <colgroup>
+                <col width="100px">
+            </colgroup>
+            <tbody>
+	                <tr class="article-title"> <!-- <tr th:each="review,state:${reviewList}" class="article-title"> -->
+	                   	   <th>문의 날짜:</th> 
+	                       <td colspan="4" th:text="${#dates.format(qna.regdate, 'yyyy-MM-dd')}" ></td>
+	                </tr>
+	                <tr class="article-info">
+                    		<th>제목:</th>
+		                    <td th:text="${qna.title}"></td>
+                    </tr>
+	                <tr class="article-info">
+			                <th >작성자: </th>
+			                <td th:text="${qna.users.id}"></td>
+		                    <th >문의항목: </th>
+		                    <td th:text="${qna.genre}"></td>
+                    </tr>
+	                <tr class="article-body">
+	                	<td colspan="4"><textarea th:text="${qna.content}" name="content" cols="120" rows="3" id="contents"></textarea></td>
+	                </tr>
+            </tbody>
+        </table>
+    </section>
+		&nbsp;&nbsp;&nbsp;<br>
+		<input type="submit" th:value=" 수정 "/>
+	</div>
+</form> 
+
+						<!-- 삭제 & 리뷰목록 버튼 -->
+		<div class="con reply1">
+			<a th:href="@{/qna/deleteUserQna(seq=${qna.seq})}"><input type="submit" value=" 삭제 "/></a>
+			<span> &nbsp;|&nbsp;|&nbsp;</span>
+			<a th:href="@{/qna/getUserQnaList}"><input type="submit" value=" QnA 목록 " /></a>
+		</div>
+		
+<br> <br><br><br>
+<!-- QnaReply 입력 -->
+<h1 class="con">답글 달기</h1>
+<div class="con reply">
+	   <section class="reply-form">
+	        <form th:action="@{/insertUserReply}" method="post">
+	        	<input name="seq" type="hidden" th:value="${qna.seq}"/>
+	            <div >
+	            	문의 항목:&nbsp;&nbsp;<span th:text="${qna.genre}"></span>
+	            </div>
+	            <div >  <!-- th:text="${qna.member.user_id}" -->
+	              작&nbsp;&nbsp;성&nbsp;&nbsp;자:  <span th:text="${qna.users.id}"></span>
+	            </div>
+	            <div>	       
+	                <textarea id="reply" cols="130" rows="3" name="reply"  placeholder=" 문의 답글을 입력해주세요."></textarea>
+	               <input type="submit" value="답글 등록">
+	            </div>
+	        </form>
+	    </section>
+	</div>
+	
+	 
+<!-- 답글 목록 --><!-- 답글삭제: qna게시글의 seq와 함께 불러와야하기 때문에.. -->
+<div class="con reply">
+    <section class="article-detail table-common con row">
+        <table class="cell" border="1">
+            <colgroup>
+                <col width="100px">
+            </colgroup>
+            <tbody>
+            <div id="replyTable">
+            	<th:block th:each="reply:${replyList}" class="article-title">
+            	<form id="deleteForm" method="POST"> 
+            		<input type="hidden" name="seq" th:value="${reply.qna.seq}">
+	                <tr class="article-title">
+	                    <th>날짜</th>
+	                    <td colspan="4" th:text="${#dates.format(reply.regdate, 'yyyy-MM-dd')}" ></td>
+	        			   <!--답글 삭제  -->              
+	        			<td>
+	        			  	<input type="button" th:onclick="'javascript:deleteUserReply('+${reply.reseq}+')'" value="댓글 삭제"/>
+	        			</td>
+	                </tr>
+	                <tr class="article-info">
+	                     <th >작성자</th>
+	                     <td th:text="${reply.users.id}"></td>
+	                </tr>
+	                <tr class="article-body">
+	                	<td colspan="4" th:text="${reply.recontent}"></td>
+	                </tr>
+                 </form>
+              </th:block>
+              </div>
+            </tbody>
+        </table>
+    </section>
+</div>
+<br><br><br><br>
+</div>
+ </body>
+</html>

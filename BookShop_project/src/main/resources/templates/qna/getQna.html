@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>qna 상세화면</title>
+<link rel="shortcut icon" type="image/x-icon"
+	href="/css/images/favicon.ico">
+<link rel="stylesheet" href="/css/style.css" type="text/css" media="all">
+<link rel="stylesheet" href="/css/flexslider.css" type="text/css"
+	media="all">
+<script src="/js/jquery-1.7.2.min.js"></script>
+<!--[if lt IE 9]><script src="js/modernizr.custom.js"></script><![endif]-->
+<script src="/js/jquery.flexslider-min.js"></script>
+<script src="/js/functions.js"></script>
+<style>
+table.type09 {
+	border-collapse: collapse;
+	text-align: center;
+	line-height: 1.5;
+}
+
+table.type09 th {
+	width: 80px;
+	font-weight: bold;
+	vertical-align: center;
+	border-bottom: 1px solid #9cabb5;
+	border-top: 1px solid #9cabb5;
+	background: #f3f6f7;
+}
+
+table.type09 td {
+	padding: 10px;
+	vertical-align: center;
+	border-bottom: 1px solid #9cabb5;
+	border-top: 1px solid #9cabb5;
+}
+
+div {
+	text-align: center;
+}
+
+a:hover, a:focus {
+	color: highlight;
+	text-decoration: underline;
+}
+
+a {
+	text-decoration: none;
+	color: blue;
+}
+
+input {
+	border: 1px solid gray;
+	border-left: none;
+	border-right: none;
+	border-top: none;
+}
+
+input:hover {
+	background-color: silver;
+}
+
+button {
+	border: 1px solid gray;
+}
+
+input:hover {
+	background-color: silver;
+}
+
+button:hover {
+	background-color: silver;
+}
+</style>
+</head>
+<body>
+
+	<div id="wrapper">
+		<header>
+			<div class="shell">
+				<h1 id="logo">
+					<a href="/">admin_main</a>
+				</h1>
+				<nav id="navigation">
+					<ul>
+						<li class="active"><a th:href="@{/}">HOME</a></li>
+						<li><a th:href="@{/board/getBoardList}">상품 관리</a></li>
+						<li><a th:href="@{/order/getOrderList}">구매 관리</a></li>
+						<li><a th:href="@{/user/getUserList}">고객 관리</a></li>
+						<li><a th:href="@{/qna/getQnaList}">문의 관리</a></li>
+					</ul>
+				</nav>
+			</div>
+		</header>
+		<br> <br>
+		<section class="top-section">
+			<div class="shell">
+				<h2 align="center">QNA</h2>
+				<span
+					data-th-text="|Today : ${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}|"></span>
+
+				<br>
+
+				<table th:align="center" class="type09" style="margin-left: 180px;">
+					<tr>
+						<th th:text="seq"><input name="seq" type="hidden"
+							th:value="${qna.seq}">
+						<td th:text="${qna.seq}"></td>
+					</tr>
+					<tr>
+						<th>작성자</th>
+						<td th:text="${qna.member.user_id}"></td>
+					</tr>
+					<tr>
+						<th>문의 종류</th>
+						<td th:text="${qna.genre}"></td>
+					</tr>
+					<tr>
+						<th>작성일</th>
+						<td th:text="${#dates.format(qna.indate, 'YYYY/MM/DD HH시 MM분')}"></td>
+					</tr>
+					<tr>
+						<th>내용</th>
+						<td th:text="${qna.content}" height="400" width="400"></td>
+					</tr>
+				</table>
+			</div>
+			<br> <br> <br>
+		</section>
+		<br>
+		<div>
+			<section class="cols">
+				<div class="shell">
+					<h3 align="center">답변</h3>
+					<br>
+					<table th:align="center" class="type09">
+						<tr th:each="reply:${replyList}"
+							th:if="${reply.qna.seq}==${qna.seq}">
+							<th>답변번호</th>
+							<td th:text="${reply.reseq}"></td>
+							<th>작성자</th>
+							<td th:text="${reply.user.user_id}"></td>
+							<th>답변날짜</th>
+							<td
+								th:Text="${#dates.format(reply.regDate, 'YYYY/MM/dd HH시 MM분')}"></td>
+							<th>답변내용</th>
+							<td th:text="${reply.recontent}" width="200px" height="130px"></td>
+							<td><a th:href="@{/qna/deleteReply(reseq=${reply.reseq})}">삭제
+									하기</a>
+						</tr>
+					</table>
+					<form th:action="@{/qna/insertReply}" method="post">
+						<br>
+						<table style="margin-left: 70px;">
+							<tr>
+								<th>답변하기</th>
+								<td><div>
+										<textarea name="reply" cols="70" rows="3"></textarea>
+									</div></td>
+								<td><div>
+										<input type="hidden" name="seq" th:value="${qna.seq}">
+										<input type="hidden" name="user_id"
+											th:value="${qna.member.user_id}"> <input
+											type="submit" style="width: 80px; height: 30px" value="등록하기">
+									</div>
+								</td>
+							</tr>
+						</table>
+					</form>
+				</div>
+			</section>
+		</div>
+	</div>
+</body>
+</html>

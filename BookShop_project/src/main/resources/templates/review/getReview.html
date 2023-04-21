@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<html>
+<head>
+<meta charset="utf-8">
+<title>리뷰 수정 및 삭제 페이지</title>
+<link rel="shortcut icon" href="css/images/favicon.ico" sizes="16x16" />
+<link rel="stylesheet" href="/css/style.css" >
+<link rel="stylesheet" href="/css/review.css"> 
+</head>
+<body>
+<!-- wrapper -->
+<div id="wrapper">
+  <header>
+    <div class="shell">
+      <h1 id="logo"><a href="index.html">Busymode</a></h1>
+       <form name="main_menu">
+      <nav id="navigation">
+        <ul>
+          <li class="active"> 
+          <a th:href="login.html">로그인</a></li>
+          <li><a th:href="signUp.html">회원가입</a></li>
+          <li><a href="#">마이페이지</a></li>
+          <li><a href="#">베스트</a></li>
+          <li><a th:href="@{/review/getReviewList}">신상품</a></li>
+          <li><a href="#">이벤트</a></li>
+           <li><a th:href="getQnaList">고객센터</a></li>
+        </ul>
+      </nav>
+      </form>
+    </div>
+  </header>
+ <br> <br><br><br><br><br><br><br>
+
+    
+<br> <br><br><br>
+<h1 class="con">리뷰 수정 및 삭제</h1>
+<form th:action="@{/updateReview}" method="post">
+	<input name="seq" type="hidden" th:value="${review.seq}"/>
+	<div class="con reply">
+	    <section class="article-detail table-common con row">
+        <table class="cell" border="1">
+            <colgroup>
+                <col width="100px">
+            </colgroup>
+            <tbody>
+            	<th:block>
+	                <tr class="article-title"> <!-- <tr th:each="review,state:${reviewList}" class="article-title"> -->
+	                   <th>날짜</th> 
+	                       <td colspan="4" th:text="${#dates.format(review.regdate, 'yyyy-MM-dd')}" ></td>
+	                </tr>
+	                <tr class="article-info">
+	                <th >책 이름 </th>
+	                    <td th:text="${review.book_id}"></td>
+	                    <th >작성자 </th>
+	                    <td th:text="${review.member.user_id}"></td>
+	                </tr>
+	                <tr class="article-body">
+	                	<td colspan="4"><textarea th:text="${review.content}" name="content" cols="120" rows="10" id="contents"></textarea></td>
+	                </tr>
+              <!--</th:block>  -->
+            </tbody>
+        </table>
+    </section>
+		&nbsp;&nbsp;&nbsp;<br>
+		<input type="submit" th:value="수정"/>
+	</div>
+</form> 
+										<!-- 삭제 & 리뷰목록 버튼 -->
+		<div class="con reply1">
+			<a th:href="@{/deleteReview(seq=${review.seq})}"><input type="submit" value="삭제"/></a>
+			<span> &nbsp;|&nbsp;| &nbsp;</span>
+			<a th:href="@{/getReviewList}"><input type="submit" value="리뷰 목록" /></a>
+		</div>
+</div>		
+</body>
+</html>

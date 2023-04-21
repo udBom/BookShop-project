@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<html>
+<head>
+<meta charset="utf-8">
+<title>QnA 고객센터페이지</title>
+<link rel="shortcut icon" href="css/images/favicon.ico" sizes="16x16" />
+<link rel="stylesheet" href="/css/style.css" > <!-- <link rel="stylesheet" th:href="/css/style.css" > -->
+<link rel="stylesheet" href="/css/review.css"> <!-- <link rel="stylesheet" th:href="/css/review.css"> -->
+<link rel="stylesheet" href="/css/commonStyle.css">
+</head>
+<body>
+<div id="wrapper" align="center">
+    <div th:replace="~{fragments/header :: header}"></div>
+ <br> <br><br><br><br><br><br><br>
+ <div align="left">
+ 	<div class="test">
+	 	<div class="tin">
+	 		QnA
+	 	</div>
+ 	</div>
+ 	
+ 	 
+	 <!-- Qna 입력 -->
+	<div class="con reply">	
+	   <section class="reply-form">
+	        <form th:action="@{/qna/insertUserQna}" method="post">
+	            <div>
+	            	문의 항목: <select id="genre" name="genre">
+	            	<option value="배송">배송</option>
+	            	<option value="교환">교환</option>
+	            	<option value="환불">환불</option>
+	            	</select>
+	            </div>
+	            <div>
+	              문의 제목:  <input id="title" type="text" name="title"> 
+	            </div>
+	            <div>	       
+	                <textarea id="content" cols="130" rows="10" name="content"  placeholder=" 문의내용을 입력해주세요."></textarea>
+	                
+	               <input type="submit" value="Qna 등록">
+	            </div>
+	        </form>
+	    </section>
+	</div>
+	
+	<br><br><br><br>
+	<h1 class="con">문의 목록</h1>
+	<div class="con reply">
+	    <section class="article-detail table-common con row">
+	        <table class="cell" border="1">
+	            <colgroup>
+	                <col width="100px">
+	            </colgroup>
+	            <tbody>
+	            <div id="qnaTable">
+	            	<th:block th:each="qna:${qnaList}" class="article-title"><!--QnaList 이름이 controller와 동일해야한다. -->
+	            	<form method="POST">
+		                <tr class="article-title">
+		                    <th>날짜</th>
+		                       <td colspan="4" th:text="${#dates.format(qna.regdate, 'yyyy-MM-dd')}" ></td>
+		                </tr>
+		                <tr class="article-info">
+		                    <th >문의 제목 </th>
+		                    <td><a th:href="@{/qna/getUserQna(seq=${qna.seq})}" th:text="${qna.title}"></a></td>
+		                     <th >작성자</th>
+		                     <td th:text="${qna.users.id}"></td>
+		                      <th >문의 항목</th>
+		                      <td th:text="${qna.genre}"></td>
+		                </tr>
+		                <tr class="article-body">
+		                	<td colspan="4" th:text="${qna.content}">리뷰 내용</td>
+		                </tr>
+	                 </form>
+	              </th:block>
+	              </div>
+	            </tbody>
+	        </table>
+	    </section>
+	</div>
+	</div>
+
+	<!-- 페이징처리 -->
+	<div class="pagination">
+		<ul>
+			<li th:each="page: ${#numbers.sequence(0,totalPage-1)}"><!-- 0페이지 부터 나와야 함! -->
+		<a th:href="@{getUserQnaList(page=${pageStat.index})}" th:text="${pageStat.index +1}"></a> 
+			 <!-- @{review/getReviewList$%^%$}아님!!! controller에 requestParam을 안해줬기 때문에! -->
+		 </li>
+		</ul>
+	</div>
+ </div>
+	
+ </body>
+</html>

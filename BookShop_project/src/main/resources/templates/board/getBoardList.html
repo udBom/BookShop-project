@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>상품 관리</title>
+<meta charset="utf-8">
+<link rel="shortcut icon" type="image/x-icon"
+	href="/css/images/favicon.ico">
+<link rel="stylesheet" href="/css/style.css" type="text/css" media="all">
+<link rel="stylesheet" href="/css/flexslider.css" type="text/css"
+	media="all">
+<script src="/js/jquery-1.7.2.min.js"></script>
+<!--[if lt IE 9]><script src="js/modernizr.custom.js"></script><![endif]-->
+<script src="/js/jquery.flexslider-min.js"></script>
+<script src="/js/functions.js"></script>
+<style>
+table.type09 {
+	border-collapse: collapse;
+	text-align: center;
+	line-height: 1.8;
+	margin-left: 110px;
+}
+
+table.type09 thead th {
+	padding: 20px;
+	font-weight: bold;
+	vertical-align: top;
+	color: #369;
+	border-bottom: 3px solid #036;
+}
+
+table.type09 tbody th {
+	width: 160px;
+	padding: 10px;
+	font-weight: bold;
+	vertical-align: top;
+	border-bottom: 1px solid #ccc;
+	background: #f3f6f7;
+}
+
+table.type09 td {
+	width: 300px;
+	padding: 10px;
+	vertical-align: top;
+	padding-left: 20px;
+	border-bottom: 1px solid #ccc;
+}
+
+ul.p {
+	text-align: center;
+	margin-top: 20px;
+}
+
+ul.p li {
+	list-style-type: none;
+	display: inline-block;
+	margin-right: 10px;
+}
+
+div {
+	text-align: center;
+}
+
+a:hover, a:focus {
+	color: highlight;
+	text-decoration: underline;
+}
+
+a {
+	text-decoration: none;
+	color: blue;
+}
+</style>
+</head>
+<body>
+	<div id="wrapper">
+		<header>
+			<div class="shell">
+				<h1 id="logo">
+					<a href="/">admin_main</a>
+				</h1>
+				<nav id="navigation">
+					<ul>
+						<li class="active"><a th:href="@{/}">HOME</a></li>
+						<li><a th:href="@{/board/getBoardList}">상품 관리</a></li>
+						<li><a th:href="@{/order/getOrderList_admin}">구매 관리</a></li>
+						<li><a th:href="@{/user/getUserList}">고객 관리</a></li>
+						<li><a th:href="@{/qna/getQnaList}">문의 관리</a></li>
+					</ul>
+				</nav>
+			</div>
+		</header>
+		<section class="top-section">
+			<div class="shell">
+				<h4 align="center">상품 관리 게시판</h4>
+				<div>
+					<span
+						data-th-text="|Today : ${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}|"></span>
+					<p>type = 1 : 국내 / type = 2 : 해외 / type = 3 : 삭제</p>
+				</div>
+				<table class="type09" th:align="center" th:width="700">
+					<thead>
+						<tr>
+							<th>id</th>
+							<th>type</th>
+							<th>title</th>
+							<th>author</th>
+							<th>publisher</th>
+							<th>register_date</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="book, state : ${boardList}" th:if="${book.type}!=3">
+							<td th:text="${book.id}" th:align="center">
+							<td th:text="${book.type}" th:align="center">
+							<td><div>
+									<a th:href="@{/board/getBoard(id=${book.id})}"
+										th:text="${book.title}"></a>
+								</div></td>
+							<td th:text="${book.author}" th:align="center">
+							<td th:text="${book.publisher}" th:align="center">
+							<td th:text="${#dates.format(book.publishing_date, 'yyyy-MM-dd')}"
+								th:align="center">
+						</tr>
+					</tbody>
+				</table>
+				<br>
+				<div>
+					<a th:href="@{/board/insertBoard}">상품 등록</a>
+				</div>
+				<div class="pagination">
+					<ul class="p">
+						<li class="p"
+							th:each="page :${#numbers.sequence(0, totalPage -1)}"><a
+							th:href="@{/board/getBoardList(page=${pageStat.index})}"
+							th:text="${pageStat.index + 1}"></a></li>
+					</ul>
+				</div>
+			</div>
+		</section>
+	</div>
+</body>
+</html>
