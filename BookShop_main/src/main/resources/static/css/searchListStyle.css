@@ -1,0 +1,55 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+
+
+.section {
+	width: 100%;
+	height: 3500px;
+}
+.content{width: 90%; height: 3500px; float: right;}
+.listbook{
+	list-style: none;
+}
+
+.border{
+	width: 800px;
+	height: 260px;
+	 margin: 50px 80px;
+	   border-top: 1px solid;
+}
+
+.horizontal{
+	width: 800px;
+	height: 260px;
+	margin-top: 30px;
+	   
+	    
+}
+.bookimage {
+	 width: 20%;   float: left; height: inherit;  
+}
+.imagesize{
+	padding: 15px 8px; border: thin solid;
+}
+img {
+	height: 190px; width: 140px;
+}
+.bookinfo {
+	 height: inherit;  float: left;width: 50%; font-size: 15px; text-align: left;   padding: 10px; 
+}
+
+.quantity{
+	  height: inherit;  float: left;width: 10%;  color: red; text-align: center; padding-top: 100px
+}
+	
+
+.button{
+	 height: inherit;  float: right;width:20%;   text-align: center;
+	 padding-top: 80px
+}
+
+.btton{
+    width: 110px;
+    height: 40px;
+}
+

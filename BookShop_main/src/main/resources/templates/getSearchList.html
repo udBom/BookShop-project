@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+<title>BookList</title>
+<meta charset="utf-8">
+<link rel="shortcut icon" type="image/x-icon" href="css/images/favicon.ico">
+<link rel="stylesheet" href="css/searchListStyle.css" type="text/css" media="all">
+<link rel="stylesheet" href="css/commonStyle.css" type="text/css" media="all">
+</head>
+<body>
+<!-- wrapper -->
+<div id="wrapper" align="center">
+  <!-- header -->
+  <div th:replace="~{fragments/header :: header}"></div>
+  <!-- end of header -->
+ 	<!-- main -->
+ 	
+	 		
+ 	<section class="section">
+ 	<div class="content">
+	 	<ol>
+	 	<th:block th:each="book : ${searchList}">
+	 		<th:block th:if="${bookStat.count} <= 10">
+	 		<li class="listbook">
+	 			<div class="border">
+	 			<form th:action="@{/cart/insertCart(cart=list)}" method="post">
+ 						<input th:name="book_id" th:value="${book.id}" type="hidden">
+ 						<input th:name="user_id" th:value="user" type="hidden">
+ 						<input th:name="quantity" th:value="1" type="hidden">
+ 						
+	 			<div class="horizontal"><!-- 리스트 틀 -->
+	 				<div class="bookimage"> <!-- 왼쪽 책 이미지 -->
+	 					<div class="imagesize">
+	 						<a th:href="@{/getBook(id=${book.id})}"><img th:src="@{'images/'+${book.image}}"></a>
+	 					</div>
+	 				</div>
+	 				<div class="bookinfo"><!-- 오른쪽 책 정보 -->
+		 				<div>
+		 				<a th:href="@{/getBook(id=${book.id})}" th:text="${book.title}"></a>
+		 				</div>
+		 				<br>
+		 				<div>
+		 					<span th:text="${book.author}"></span>
+		 				</div>
+		 				<div>
+		 					<span th:text="${book.publisher}"></span>
+		 					<span th:text="${#dates.format(book.publishing_date, 'yyyy-MM-dd')}"></span>
+		 				</div>
+		 				<br>
+		 				<div>
+		 					<span th:text="${book.price}+'원'"></span>
+		 				</div>
+	 				</div>
+	 				<div class="quantity"> <!-- 품절 여부 -->
+	 					<th:block th:if="${book.quantity} == 0">
+	 						<span>품절</span>
+	 					</th:block>
+	 				</div>
+	 				<div class="button"> <!-- 장바구니 구매 버튼 -->
+	 					<div>
+	 						<input type="submit" value="장바구니" onclick="alert('장바구니에 담겼습니다.')" class="btton">
+	 					</div>
+	 				<!-- 
+	 					<div>
+	 						<input type="submit" value="바로 구매" class="btton">
+	 					</div>
+	 				 -->
+	 				</div>
+	 			</div>
+	 		</form>	
+	 			</div>
+	 		</li>
+	 		</th:block>
+	 	</th:block>
+	 	</ol>
+ 		</div>
+ 		
+ 	</section>
+      
+</div>
+ 
+   
+<!-- footer -->
+<th:block th:replace="~{fragments/footer :: footer}"></th:block>
+<!-- end of footer -->
+</body>
+</html>
